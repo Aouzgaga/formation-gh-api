@@ -8,4 +8,5 @@ public class Utilisateur
     public string Email { get; set; } = string.Empty;
 
     public ICollection<CompteurConges> CompteursConges { get; set; } = new List<CompteurConges>();
+    public ICollection<DemandeConges> DemandesConges { get; set; } = new List<DemandeConges>();
 }
