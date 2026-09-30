@@ -8,7 +8,9 @@ public record CreerCongeCommand(string NomUtilisateur, DateOnly DateDebut, DateO
 public enum CreerCongeStatut
 {
     Succes,
+    NomUtilisateurManquant,
     UtilisateurIntrouvable,
+    UtilisateurAmbigu,
     PlageDatesInvalide,
 }
 

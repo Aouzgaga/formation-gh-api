@@ -65,7 +65,9 @@ public class CongesController : ControllerBase
         return resultat.Statut switch
         {
             CreerCongeStatut.Succes => CreatedAtAction(nameof(ObtenirSolde), new { utilisateurId = resultat.Conge!.UtilisateurId, annee = resultat.Conge.DateDebut.Year }, resultat.Conge),
+            CreerCongeStatut.NomUtilisateurManquant => BadRequest("Le nom de l'utilisateur est requis."),
             CreerCongeStatut.UtilisateurIntrouvable => NotFound(),
+            CreerCongeStatut.UtilisateurAmbigu => Conflict("Plusieurs utilisateurs correspondent à ce nom."),
             CreerCongeStatut.PlageDatesInvalide => BadRequest("La date de fin doit être postérieure ou égale à la date de début."),
             _ => BadRequest(),
         };

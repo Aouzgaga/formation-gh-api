@@ -17,6 +17,11 @@ public class CreerCongeHandler : IRequestHandler<CreerCongeCommand, CreerCongeRe
 
     public async Task<CreerCongeResult> HandleAsync(CreerCongeCommand request, CancellationToken cancellationToken)
     {
+        if (string.IsNullOrWhiteSpace(request.NomUtilisateur))
+        {
+            return new CreerCongeResult(CreerCongeStatut.NomUtilisateurManquant, null);
+        }
+
         if (request.DateFin < request.DateDebut)
         {
             return new CreerCongeResult(CreerCongeStatut.PlageDatesInvalide, null);
@@ -24,15 +29,21 @@ public class CreerCongeHandler : IRequestHandler<CreerCongeCommand, CreerCongeRe
 
         var nomRecherche = request.NomUtilisateur.Trim().ToLower();
 
-        var utilisateur = await _dbContext.Utilisateurs
-            .FirstOrDefaultAsync(
-                u => (u.Prenom + " " + u.Nom).ToLower() == nomRecherche || u.Nom.ToLower() == nomRecherche,
-                cancellationToken);
+        var utilisateursCorrespondants = await _dbContext.Utilisateurs
+            .Where(u => (u.Prenom + " " + u.Nom).ToLower() == nomRecherche || u.Nom.ToLower() == nomRecherche)
+            .ToListAsync(cancellationToken);
 
-        if (utilisateur is null)
+        if (utilisateursCorrespondants.Count == 0)
         {
             return new CreerCongeResult(CreerCongeStatut.UtilisateurIntrouvable, null);
         }
+
+        if (utilisateursCorrespondants.Count > 1)
+        {
+            return new CreerCongeResult(CreerCongeStatut.UtilisateurAmbigu, null);
+        }
+
+        var utilisateur = utilisateursCorrespondants[0];
 
         var conge = new Conge
         {
