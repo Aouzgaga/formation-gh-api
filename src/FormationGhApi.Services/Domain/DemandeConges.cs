@@ -9,5 +9,5 @@ public class DemandeConges
 
     public Utilisateur? Utilisateur { get; set; }
 
-    public double NombreJours => DateFin.DayNumber - DateDebut.DayNumber + 1;
+    public int NombreJours => DateFin.DayNumber - DateDebut.DayNumber + 1;
 }

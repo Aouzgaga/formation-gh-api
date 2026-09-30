@@ -26,7 +26,8 @@ public class DemandesCongesController : ControllerBase
         {
             CreerDemandeCongesStatut.Succes => CreatedAtAction(nameof(Creer), new { id = resultat.Demande!.Id }, resultat.Demande),
             CreerDemandeCongesStatut.PlageDatesInvalide => BadRequest("La date de fin doit être postérieure ou égale à la date de début."),
-            _ => NotFound(),
+            CreerDemandeCongesStatut.UtilisateurIntrouvable => NotFound(),
+            _ => throw new InvalidOperationException($"Statut de création de demande de congés non géré : {resultat.Statut}"),
         };
     }
 }
