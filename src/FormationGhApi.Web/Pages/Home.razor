@@ -1,0 +1,40 @@
+﻿@page "/"
+@inject CongesStorageService Storage
+
+<PageTitle>Utilisateurs — Gestion des congés</PageTitle>
+
+<section class="page-heading">
+    <p class="eyebrow">ESPACE ÉQUIPE</p>
+    <h1>Les utilisateurs</h1>
+    <p class="muted">Consultez les soldes et gérez les congés de votre équipe.</p>
+</section>
+
+@if (utilisateurs is null)
+{
+    <p role="status">Chargement des utilisateurs…</p>
+}
+else
+{
+    <section class="user-list" aria-label="Liste des utilisateurs">
+        @foreach (var utilisateur in utilisateurs)
+        {
+            <a class="user-card" href="@($"/user/{utilisateur.Id}")">
+                <span class="avatar" aria-hidden="true">@utilisateur.Prenom[0]@utilisateur.Nom[0]</span>
+                <span class="user-info">
+                    <strong>@utilisateur.Prenom @utilisateur.Nom</strong>
+                    <span class="muted">@utilisateur.Email</span>
+                </span>
+                <span class="card-arrow" aria-hidden="true">→</span>
+            </a>
+        }
+    </section>
+}
+
+@code {
+    private IReadOnlyList<Utilisateur>? utilisateurs;
+
+    protected override async Task OnInitializedAsync()
+    {
+        utilisateurs = await Storage.ObtenirUtilisateursAsync();
+    }
+}

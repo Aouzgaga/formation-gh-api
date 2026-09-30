@@ -1,0 +1,147 @@
+@page "/user/{Id:int}"
+@inject CongesStorageService Storage
+
+<PageTitle>@(utilisateur is null ? "Utilisateur" : $"{utilisateur.Prenom} {utilisateur.Nom}") — Gestion des congés</PageTitle>
+
+@if (chargement)
+{
+    <p role="status">Chargement…</p>
+}
+else if (utilisateur is null)
+{
+    <a class="back-link" href="/">← Tous les utilisateurs</a>
+    <h1>Utilisateur introuvable</h1>
+}
+else
+{
+    <a class="back-link" href="/">← Tous les utilisateurs</a>
+    <section class="page-heading">
+        <p class="eyebrow">ESPACE ÉQUIPE / UTILISATEUR</p>
+        <h1>@utilisateur.Prenom @utilisateur.Nom</h1>
+        <p class="muted">@utilisateur.Email</p>
+    </section>
+
+    <section class="balance-grid" aria-label="Solde de congés payés">
+        <article class="balance-card">
+            <span class="muted">Solde disponible</span>
+            <strong>@utilisateur.JoursSolde.ToString("0.##") <small>jours</small></strong>
+        </article>
+        <article class="balance-card">
+            <span class="muted">Jours acquis</span>
+            <strong>@utilisateur.JoursAcquis.ToString("0.##") <small>jours</small></strong>
+        </article>
+        <article class="balance-card">
+            <span class="muted">Jours pris</span>
+            <strong>@utilisateur.JoursPris.ToString("0.##") <small>jours</small></strong>
+        </article>
+    </section>
+
+    <section class="section-card">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">PLANIFICATION</p>
+                <h2>Poser un congé</h2>
+            </div>
+        </div>
+        <div class="leave-form">
+            <label>
+                Date de début
+                <input type="date" @bind="dateDebut" />
+            </label>
+            <label>
+                Date de fin
+                <input type="date" @bind="dateFin" />
+            </label>
+            <button class="primary-button" type="button" @onclick="AjouterConge"
+                    disabled="@(NombreJoursSelectionnes <= 0 || NombreJoursSelectionnes > utilisateur.JoursSolde)">
+                Poser le congé
+            </button>
+        </div>
+        <p class="form-hint">
+            @if (NombreJoursSelectionnes <= 0)
+            {
+                <span>Choisissez une période contenant au moins un jour ouvré.</span>
+            }
+            else
+            {
+                <span>@NombreJoursSelectionnes jour(s) ouvré(s) sélectionné(s), hors week-ends.</span>
+            }
+        </p>
+        @if (!string.IsNullOrEmpty(erreur))
+        {
+            <p class="error-message" role="alert">@erreur</p>
+        }
+    </section>
+
+    <section class="section-card">
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">HISTORIQUE</p>
+                <h2>Congés posés <span class="count">@utilisateur.Conges.Count</span></h2>
+            </div>
+        </div>
+        @if (utilisateur.Conges.Count == 0)
+        {
+            <p class="empty-state">Aucun congé n’a été posé pour le moment.</p>
+        }
+        else
+        {
+            <div class="leave-list">
+                @foreach (var conge in utilisateur.Conges.OrderBy(c => c.DateDebut))
+                {
+                    <article class="leave-row">
+                        <span class="leave-icon" aria-hidden="true">↗</span>
+                        <span class="leave-dates">
+                            <strong>@conge.DateDebut.ToString("dd/MM/yyyy") – @conge.DateFin.ToString("dd/MM/yyyy")</strong>
+                            <span class="muted">@conge.NombreJours jour(s) ouvré(s)</span>
+                        </span>
+                        <button class="delete-button" type="button" @onclick="() => SupprimerConge(conge.Id)"
+                                aria-label="@($"Supprimer le congé du {conge.DateDebut:dd/MM/yyyy}")">
+                            Supprimer
+                        </button>
+                    </article>
+                }
+            </div>
+        }
+    </section>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Utilisateur? utilisateur;
+    private DateOnly dateDebut = DateOnly.FromDateTime(DateTime.Today);
+    private DateOnly dateFin = DateOnly.FromDateTime(DateTime.Today);
+    private string? erreur;
+    private bool chargement = true;
+
+    private int NombreJoursSelectionnes => CongesStorageService.CompterJoursOuvres(dateDebut, dateFin);
+
+    protected override async Task OnParametersSetAsync()
+    {
+        chargement = true;
+        utilisateur = await Storage.ObtenirUtilisateurAsync(Id);
+        chargement = false;
+    }
+
+    private async Task AjouterConge()
+    {
+        erreur = null;
+        try
+        {
+            await Storage.AjouterCongeAsync(Id, dateDebut, dateFin);
+            utilisateur = await Storage.ObtenirUtilisateurAsync(Id);
+        }
+        catch (InvalidOperationException exception)
+        {
+            erreur = exception.Message;
+        }
+    }
+
+    private async Task SupprimerConge(Guid congeId)
+    {
+        await Storage.SupprimerCongeAsync(Id, congeId);
+        utilisateur = await Storage.ObtenirUtilisateurAsync(Id);
+    }
+}
