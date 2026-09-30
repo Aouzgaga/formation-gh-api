@@ -18,7 +18,7 @@ else
     <section class="user-list" aria-label="Liste des utilisateurs">
         @foreach (var utilisateur in utilisateurs)
         {
-            <a class="user-card" href="@($"/user/{utilisateur.Id}")">
+            <a class="user-card" href="@($"user/{utilisateur.Id}")">
                 <span class="avatar" aria-hidden="true">@utilisateur.Prenom[0]@utilisateur.Nom[0]</span>
                 <span class="user-info">
                     <strong>@utilisateur.Prenom @utilisateur.Nom</strong>
