@@ -1,5 +1,6 @@
 using FormationGhApi.Api.Contracts;
 using FormationGhApi.Services.Dtos;
+using FormationGhApi.Services.Features.Conges.CreerConge;
 using FormationGhApi.Services.Features.Conges.DeclarerPriseConges;
 using FormationGhApi.Services.Features.Conges.ObtenirSoldeConges;
 using FormationGhApi.Services.Features.Conges.ReinitialiserCompteurConges;
@@ -54,5 +55,19 @@ public class CongesController : ControllerBase
         }
 
         return Ok(solde);
+    }
+
+    [HttpPost("~/api/conges")]
+    public async Task<ActionResult<CongeDto>> Creer([FromBody] CreerCongeRequest request, CancellationToken cancellationToken)
+    {
+        var resultat = await _mediator.SendAsync(new CreerCongeCommand(request.NomUtilisateur, request.DateDebut, request.DateFin), cancellationToken);
+
+        return resultat.Statut switch
+        {
+            CreerCongeStatut.Succes => CreatedAtAction(nameof(ObtenirSolde), new { utilisateurId = resultat.Conge!.UtilisateurId, annee = resultat.Conge.DateDebut.Year }, resultat.Conge),
+            CreerCongeStatut.UtilisateurIntrouvable => NotFound(),
+            CreerCongeStatut.PlageDatesInvalide => BadRequest("La date de fin doit être postérieure ou égale à la date de début."),
+            _ => BadRequest(),
+        };
     }
 }

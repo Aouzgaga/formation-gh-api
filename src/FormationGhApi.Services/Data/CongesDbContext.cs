@@ -11,6 +11,7 @@ public class CongesDbContext : DbContext
 
     public DbSet<Utilisateur> Utilisateurs => Set<Utilisateur>();
     public DbSet<CompteurConges> CompteursConges => Set<CompteurConges>();
+    public DbSet<Conge> Conges => Set<Conge>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -31,6 +32,18 @@ public class CongesDbContext : DbContext
                 .HasForeignKey(c => c.UtilisateurId)
                 .OnDelete(DeleteBehavior.Cascade);
             entity.Ignore(c => c.JoursSolde);
+        });
+
+        modelBuilder.Entity<Conge>(entity =>
+        {
+            entity.HasKey(c => c.Id);
+            entity.Property(c => c.DateDebut).IsRequired();
+            entity.Property(c => c.DateFin).IsRequired();
+            entity.HasOne(c => c.Utilisateur)
+                .WithMany()
+                .HasForeignKey(c => c.UtilisateurId)
+                .OnDelete(DeleteBehavior.Cascade);
+            entity.Ignore(c => c.NombreJours);
         });
     }
 }

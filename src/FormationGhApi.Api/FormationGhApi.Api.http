@@ -4,3 +4,14 @@ GET {{FormationGhApi.Api_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+POST {{FormationGhApi.Api_HostAddress}}/api/conges
+Content-Type: application/json
+
+{
+  "nomUtilisateur": "Jean Dupont",
+  "dateDebut": "2024-07-01",
+  "dateFin": "2024-07-05"
+}
+
+###

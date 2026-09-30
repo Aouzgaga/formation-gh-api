@@ -1,5 +1,6 @@
 using FormationGhApi.Services.Data;
 using FormationGhApi.Services.Dtos;
+using FormationGhApi.Services.Features.Conges.CreerConge;
 using FormationGhApi.Services.Features.Conges.DeclarerPriseConges;
 using FormationGhApi.Services.Features.Conges.ObtenirSoldeConges;
 using FormationGhApi.Services.Features.Conges.ReinitialiserCompteurConges;
@@ -25,6 +26,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IRequestHandler<DeclarerPriseCongesCommand, DeclarerPriseCongesResult>, DeclarerPriseCongesHandler>();
         services.AddScoped<IRequestHandler<ReinitialiserCompteurCongesCommand, SoldeCongesDto?>, ReinitialiserCompteurCongesHandler>();
         services.AddScoped<IRequestHandler<ObtenirListeUtilisateursQuery, IReadOnlyList<UtilisateurDto>>, ObtenirListeUtilisateursHandler>();
+        services.AddScoped<IRequestHandler<CreerCongeCommand, CreerCongeResult>, CreerCongeHandler>();
 
         return services;
     }
