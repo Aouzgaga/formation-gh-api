@@ -66,11 +66,16 @@ public sealed class CongesStorageService(IJSRuntime jsRuntime)
         }
 
         var nombreJours = 0;
-        for (var date = dateDebut; date <= dateFin; date = date.AddDays(1))
+        for (var date = dateDebut; ; date = date.AddDays(1))
         {
             if (date.DayOfWeek is not DayOfWeek.Saturday and not DayOfWeek.Sunday)
             {
                 nombreJours++;
+            }
+
+            if (date == dateFin)
+            {
+                break;
             }
         }
 
