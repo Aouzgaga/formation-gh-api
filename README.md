@@ -6,6 +6,10 @@ API et interface de gestion des congés.
 
 L’application Blazor WebAssembly utilise le stockage local du navigateur pour conserver les utilisateurs, les soldes et les congés.
 
+Au démarrage, un écran demande un mot de passe. La valeur par défaut est `1234` ; elle se configure dans `src/FormationGhApi.Web/wwwroot/appsettings.json` avec la clé `ApplicationPassword`.
+
+Cette protection masque l’interface, mais ne sécurise pas les données : le mot de passe d’une application Blazor WebAssembly statique est accessible aux visiteurs. Pour protéger réellement l’application, il faut vérifier l’authentification côté serveur.
+
 ```bash
 dotnet run --project src/FormationGhApi.Web/FormationGhApi.Web.csproj
 ```
