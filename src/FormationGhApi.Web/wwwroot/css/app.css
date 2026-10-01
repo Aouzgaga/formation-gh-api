@@ -59,6 +59,57 @@ button, input {
     padding: 60px 0 48px;
 }
 
+.auth-page {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+}
+
+.auth-card {
+    width: min(100%, 420px);
+    padding: 32px;
+    background: #fff;
+    border: 1px solid #e5ebe5;
+    border-radius: 14px;
+    box-shadow: 0 3px 12px rgb(24 48 34 / 3%);
+}
+
+.auth-card h1 {
+    margin-bottom: 8px;
+}
+
+.auth-card form {
+    display: grid;
+    gap: 16px;
+    margin-top: 26px;
+}
+
+.auth-card label {
+    display: grid;
+    gap: 8px;
+    color: #4a5e50;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.auth-card input {
+    height: 44px;
+    padding: 0 11px;
+    border: 1px solid #dce5dd;
+    border-radius: 8px;
+}
+
+.auth-card input:focus {
+    border-color: #31986f;
+    outline: 3px solid #dff2e8;
+}
+
+.auth-status {
+    padding: 60px 20px;
+    text-align: center;
+}
+
 .page-heading {
     margin: 0 0 30px;
 }
