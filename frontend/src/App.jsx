@@ -1,9 +1,15 @@
 import { useEffect, useState } from 'react'
-import { BrowserRouter, Link, Route, Routes, useParams } from 'react-router-dom'
+import { BrowserRouter, Link, Route, Routes, useLocation, useParams } from 'react-router-dom'
 import PasswordGate from './PasswordGate.jsx'
 import { addLeave, deleteLeave, getUsers, workingDays } from './storage.js'
 
 function Layout({ children }) {
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    document.querySelector('.content h1')?.focus()
+  }, [pathname])
+
   return (
     <>
       <header className="site-header">
@@ -28,7 +34,7 @@ function HomePage() {
     <Layout>
       <section className="page-heading">
         <p className="eyebrow">ESPACE ÉQUIPE</p>
-        <h1>Les utilisateurs</h1>
+        <h1 tabIndex={-1}>Les utilisateurs</h1>
         <p className="muted">Consultez les soldes et gérez les congés de votre équipe.</p>
       </section>
       <section className="user-list" aria-label="Liste des utilisateurs">
@@ -96,12 +102,12 @@ function UserDetailsPage() {
     <Layout>
       <Link className="back-link" to="/">← Tous les utilisateurs</Link>
       {!user ? (
-        <h1>Utilisateur introuvable</h1>
+        <h1 tabIndex={-1}>Utilisateur introuvable</h1>
       ) : (
         <>
           <section className="page-heading">
             <p className="eyebrow">ESPACE ÉQUIPE / UTILISATEUR</p>
-            <h1>{user.prenom} {user.nom}</h1>
+            <h1 tabIndex={-1}>{user.prenom} {user.nom}</h1>
             <p className="muted">{user.email}</p>
           </section>
 
@@ -196,7 +202,7 @@ function NotFoundPage() {
   }, [])
   return (
     <Layout>
-      <h1>Page introuvable</h1>
+      <h1 tabIndex={-1}>Page introuvable</h1>
       <p>La page demandée n’existe pas.</p>
     </Layout>
   )
