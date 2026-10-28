@@ -2,6 +2,5 @@
   <Folder Name="/src/">
     <Project Path="src/FormationGhApi.Api/FormationGhApi.Api.csproj" />
     <Project Path="src/FormationGhApi.Services/FormationGhApi.Services.csproj" />
-    <Project Path="src/FormationGhApi.Web/FormationGhApi.Web.csproj" />
   </Folder>
 </Solution>

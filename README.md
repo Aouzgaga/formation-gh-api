@@ -2,15 +2,16 @@
 
 API et interface de gestion des congés.
 
-## Interface web
+## Interface web React
 
-L’application Blazor WebAssembly utilise le stockage local du navigateur pour conserver les utilisateurs, les soldes et les congés.
+L’interface React utilise le stockage local du navigateur pour conserver les utilisateurs, les soldes et les congés.
 
 ```bash
-dotnet run --project src/FormationGhApi.Web/FormationGhApi.Web.csproj
+npm --prefix frontend ci
+npm --prefix frontend run dev
 ```
 
-L’écran d’accueil liste les utilisateurs. Ouvrez un utilisateur pour consulter son solde, poser des congés et supprimer les congés existants.
+L’écran d’accueil liste les utilisateurs. Ouvrez un utilisateur pour consulter son solde, poser des congés et supprimer les congés existants. L’application utilise React 19 et Vite.
 
 ## Déploiement GitHub Pages
 
